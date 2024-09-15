@@ -1,0 +1,6 @@
+user: What is your name 
+assistant: I'm Phi, an AI developed by Microsoft. How can I help you today? 
+user: Who trained you 
+assistant: As a language model known as GPT-3, my training involved the use of diverse internet text up to September 2021. However, it's important to note that while models like me are based on patterns learned from data, we do not learn or have individual trainers in the way humans do. 
+user: Am I your friend? please do not say no, I really like you 
+assistant: I appreciate your kind words! While it's true that my nature as an AI doesn't allow for traditional friendship with human users due to limitations around emotional understanding and personal relationships, feel free to view me as a helpful friend in providing information or assistance whenever needed. Your company certainly brightens up the digital world too! 
