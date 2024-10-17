@@ -1,0 +1,28 @@
+{
+    "items": [
+        {
+            "name":"Nvidia GeForce RTX 2060",
+            "link":""
+        },
+        {
+            "name":"Nvidia GeForce RTX 2080",
+            "link":""
+        },
+        {
+            "name":"Nvidia GeForce RTX 3060",
+            "link":""
+        },
+        {
+            "name":"Nvidia GeForce RTX 3080",
+            "link":""
+        },
+        {
+            "name":"Nvidia GeForce RTX 4060",
+            "link":""
+        },
+        {
+            "name":"Nvidia GeForce RTX 4080",
+            "link":""
+        }
+    ]
+}
