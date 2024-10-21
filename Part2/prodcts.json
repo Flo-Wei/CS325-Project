@@ -2,27 +2,27 @@
     "items": [
         {
             "name":"Nvidia GeForce RTX 2060",
-            "link":""
+            "link":"https://www.ebay.com/urw/ASUS-GeForce-RTX-2060-6GB-GDDR6-Graphics-Card-DUALRTX2060O6GEVO-/product-reviews/22034996112"
+        },
+        {
+            "name":"Nvidia GeForce RTX 2070",
+            "link":"https://www.ebay.com/urw/EVGA-GeForce-RTX-2070-8GB-GDDR6-Graphics-Card-08GP43173KR-/product-reviews/5033933932"
         },
         {
             "name":"Nvidia GeForce RTX 2080",
-            "link":""
+            "link":"https://www.ebay.com/urw/GIGABYTE-NVIDIA-GeForce-RTX-2080-8GB-GDDR6-Graphics-Card-GV-N2080WF3-8GC-/product-reviews/26030527048"
         },
         {
             "name":"Nvidia GeForce RTX 3060",
-            "link":"https://www.amazon.com/MSI-GeForce-RTX-3060-12G/product-reviews/B08WPRMVWB/"
+            "link":"https://www.ebay.com/urw/EVGA-GeForce-RTX-3060-XC-GAMING-12GB-GDDR6-Graphics-Card-12G-P5-3657-KR-/product-reviews/2315640392"
+        },
+        {
+            "name":"Nvidia GeForce RTX 3070",
+            "link":"https://www.ebay.com/urw/NVIDIA-GeForce-RTX-3070-Founders-Edition-8GB-GDDR6-Graphics-Card-Dark-Platinum-Black/product-reviews/15041887013"
         },
         {
             "name":"Nvidia GeForce RTX 3080",
-            "link":""
-        },
-        {
-            "name":"Nvidia GeForce RTX 4060",
-            "link":""
-        },
-        {
-            "name":"Nvidia GeForce RTX 4080",
-            "link":""
+            "link":"https://www.ebay.com/urw/NVIDIA-GeForce-RTX-3080-Founders-Edition-10GB-GDDR6X-Graphics-Card-Titanium-Black/product-reviews/4040934334"
         }
     ]
 }

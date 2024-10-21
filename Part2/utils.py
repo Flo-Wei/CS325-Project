@@ -29,6 +29,13 @@ def load_items(file_path:str):
     with open(file_path, 'r') as file:
         data = json.load(file)
         return data["items"]    
+    
+def save_data(data, file_path):
+    try:
+        with open(file_path, 'w') as json_file:
+            json.dump(data, json_file, indent=4)
+    except Exception as e:
+        print(f"An error occurred while writing to the file: {e}")
 
 
 def scrape_reviews(url):
@@ -52,12 +59,19 @@ def scrape_reviews(url):
             return response
 
         soup = BeautifulSoup(response.content, 'html.parser')
-        reviews = soup.find_all('div', {'class': 'ebay-review-section-r'})
+        review_sections = soup.find_all('div', {'class': 'ebay-review-section-r'})
+
+        reviews = []
+        for section in review_sections:
+            title = section.find('h3', {'class': 'review-item-title'})
+            review_text = section.find('p', {'class': 'review-item-content'})
+            if title and review_text:
+                reviews.append(f'{title.text.strip()}: {review_text.text.strip()}')
 
         if soup.find(string="Sorry, no reviews match your current selections."):
             raise IndexError("This page has no reviews.")
         
-        return [review.get_text(strip=True) for review in reviews]
+        return reviews
     
     except requests.RequestException as e:
         print(f"Error occurred while scraping {url}: {str(e)}")
