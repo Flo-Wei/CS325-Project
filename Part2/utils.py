@@ -1,8 +1,11 @@
 import re
 import json
+from fake_useragent import UserAgent
+from bs4 import BeautifulSoup
+import requests
 
 
-class URL_Amazon:
+class URL_Ebay:
     def __init__(self, url):
         self.url = url
         self.product_name = None
@@ -11,32 +14,54 @@ class URL_Amazon:
 
     def parse_url(self):
         # URL Format:
-        # https://www.amazon.com/<product_name>/<page_view>/<offer_code>/?pageNumber=<page>
-        # product name: name of the product search e.g RTX 2060
-        # page_view: "dp" (actual product page), "product-reviews" (review page)
-        # offer_code: individual ID of the offer
-        # page: number of review page
-        pattern = r"https://www\.amazon\.com/(?P<product_name>[^/]+)/[^/]+/(?P<offer_code>[^/]+)/?"
+        # https://www.ebay.com/urw/<product_name>/product-reviews/<offer_code>?pgn=<page>
+        pattern = r"https://www\.ebay\.com/urw/(?P<product_name>[^/]+)/product-reviews/(?P<offer_code>[^/]+)"
         match = re.match(pattern, self.url)
         if match:
             self.product_name = match.group('product_name')
             self.offer_code = match.group('offer_code')
     
     def get_review_page(self, page_number:int):
-        return f"https://www.amazon.com/{self.product_name}/product-reviews/{self.offer_code}/?pageNumber={page_number}"
+        return f"https://www.ebay.com/urw/{self.product_name}/product-reviews/{self.offer_code}?pgn={page_number}"
 
 
 def load_items(file_path:str):
     with open(file_path, 'r') as file:
         data = json.load(file)
-        return data
-
-        return [item['link'] for item in data['items']]
+        return data["items"]    
 
 
+def scrape_reviews(url):
+    try:
+        ua = UserAgent()
+        headers = {
+            'User-Agent': ua.random,
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Connection': 'keep-alive',
+            'Referer': 'https://www.ebay.com/',
+            'Upgrade-Insecure-Requests': '1',
+            'DNT': '1',
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache'
+        }
+        response = requests.get(url, headers=headers)
+        if response.status_code != 200:
+            print(f"Failed to fetch URL: {url} with status code: {response.status_code}")
+            return response
 
-# class ReviewScraper:
-#     def __init__(self, url: URL_Amazon, ):
+        soup = BeautifulSoup(response.content, 'html.parser')
+        reviews = soup.find_all('div', {'class': 'ebay-review-section-r'})
+
+        if soup.find(string="Sorry, no reviews match your current selections."):
+            raise IndexError("This page has no reviews.")
+        
+        return [review.get_text(strip=True) for review in reviews]
+    
+    except requests.RequestException as e:
+        print(f"Error occurred while scraping {url}: {str(e)}")
+        return []
 
 
 
@@ -57,4 +82,5 @@ if __name__ == "__main__":
     # print(url_parser.get_review_page(3))
 
     path = r"Part2\prodcts.json"
-    
+
+    data = load_items(path)
