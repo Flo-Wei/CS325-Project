@@ -87,24 +87,3 @@ def scrape_reviews(url: str):
         print(f"Error occurred while scraping {url}: {str(e)}")
         return []
 
-
-
-
-
-
-
-
-
-
-
-if __name__ == "__main__":
-    # url = "https://www.amazon.com/MSI-GeForce-RTX-3060-12G/product-reviews/B08WPRMVWB/"
-    # url_parser = URL_Amazon(url)
-    # print(url)
-    # print("Product Name:", url_parser.product_name)
-    # print("Offer Code:", url_parser.offer_code)
-    # print(url_parser.get_review_page(3))
-
-    path = r"Part2\prodcts.json"
-
-    data = load_items(path)
