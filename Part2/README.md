@@ -24,7 +24,6 @@ The second part of the CS325 Poject fonuses on web scraping. I used python's `re
                 "name": "Product Name",
                 "link": "https://www.ebay.com/urw/..."
             },
-            ...
         ]
     }
 
@@ -54,10 +53,8 @@ The script ouputs the scraped reviews in json format to the speciefied file. Her
         "link": "https://www.ebay.com/urw/...",
         "reviews": [
             "Title 1: Review text 1...",
-            "Title 2: Review text 2...",
-            ...
+            "Title 2: Review text 2..."
         ]
-    },
-    ...
+    }
 ]
 ```
