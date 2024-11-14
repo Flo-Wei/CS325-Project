@@ -3,24 +3,20 @@ from fuzzywuzzy import fuzz
 import logging
 
 class OutputParser:
-    def __init__(self, valid_responses:set={"positive", "negative", "neutral"}, threshold:int=80, debug:bool=False):
+    def __init__(self, valid_responses:set={"positive", "negative", "neutral"}, threshold:int=80):
+        logging.info("Initializing Output Parser...")
         self.threshold = self._validate_threshold(threshold)
-        self.debug = debug
         self.valid_responses = valid_responses
 
         self.global_counter = Counter({response: 0 for response in self.valid_responses})
         self.global_counter["other"] = 0
 
-        if debug:
-            logging.basicConfig(level=logging.DEBUG)
-        else:
-            logging.basicConfig(level=logging.WARNING)
-    
     def _validate_threshold(self, threshold):
         if 0 <= threshold <= 100:
             return threshold
         else:
-            raise ValueError("Threshold must be between 0 and 100")
+            logging.error(f"Invalid threshold: {threshold}. Must be between 0 and 100.")
+            raise ValueError(f"Invalid threshold: {threshold}. Must be between 0 and 100.")
         
     def _normalize_response(self, response):
         return response.strip().lower()
@@ -30,12 +26,13 @@ class OutputParser:
 
     def update_counter(self, counter, original_response, key, match_type):
         counter[key] += 1
-        logging.debug(f"{original_response}: {key} ({match_type})")
+        logging.debug(f"'{original_response}': {key} ({match_type})")
 
     def get_count(self):
         return self.global_counter
 
     def parse_responses(self, responses):
+        logging.info(f"parsing {len(responses)} responses...")
         local_counter = Counter({response: 0 for response in self.valid_responses})
         local_counter["other"] = 0
 
@@ -62,7 +59,7 @@ class OutputParser:
                     else:
                         # If no suitable match or multiple matches found, classify as "other"
                         self.update_counter(local_counter, response, "other", "no or multiple matches")
-
+        logging.info(f"parsing finished: {local_counter}")
         self.global_counter += local_counter
         return local_counter
     
@@ -70,13 +67,18 @@ class OutputParser:
 
 if __name__ == "__main__":
 
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format='%(asctime)s - %(levelname)s - %(message)s'
+    )
+
     parser = OutputParser(
         valid_responses={
             "positive": {"positive", "good", "great", "excellent", "fantastic", "wonderful", "superb", "awesome", "favorable", "happy", "satisfied", "pleased"},
             "negative": {"negative", "bad", "terrible", "awful", "poor", "horrible", "dismal", "unhappy", "dissatisfied", "sad", "miserable", "displeased", "frustrating", "depressing"},
             "neutral": {"neutral", "okay", "average", "mediocre", "indifferent", "fair", "so-so", "unremarkable", "balanced", "nonchalant"}
             },
-        debug=True
+            threshold=80
     )
 
     responses = [
