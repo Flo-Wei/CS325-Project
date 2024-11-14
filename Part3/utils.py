@@ -31,6 +31,4 @@ def plot_response_durations(responses:list):
     plt.legend()
     plt.grid(True)
     plt.show()
-    
-
 
