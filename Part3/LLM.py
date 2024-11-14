@@ -57,12 +57,12 @@ class OllamaLLM():
 
 
     def do_sentiment_analysis(self, reviews:list, prompt_template:str, verbose=True):
-        logging.info(f"doing sentiment analysis on {len(reviews)} reviews")
+        logging.debug(f"doing sentiment analysis on {len(reviews)} reviews")
         assert isinstance(reviews, list)
         assert isinstance(prompt_template, str)
 
         sentiments = []
-        # reviews = reviews[:25]
+        reviews = reviews[:15]
 
         for review in tqdm(reviews, disable=not verbose, desc="progress"):
             result = self.client.generate(

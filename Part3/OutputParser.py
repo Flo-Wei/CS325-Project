@@ -7,9 +7,7 @@ class OutputParser:
         logging.info("Initializing Output Parser...")
         self.threshold = self._validate_threshold(threshold)
         self.valid_responses = valid_responses
-
-        self.global_counter = Counter({response: 0 for response in self.valid_responses})
-        self.global_counter["other"] = 0
+        self.global_counter = dict()
 
     def _validate_threshold(self, threshold):
         if 0 <= threshold <= 100:
@@ -31,8 +29,8 @@ class OutputParser:
     def get_count(self):
         return self.global_counter
 
-    def parse_responses(self, responses):
-        logging.info(f"parsing {len(responses)} responses...")
+    def parse_responses(self, responses:list, product_name:str=None):
+        logging.debug(f"parsing {len(responses)} responses...")
         local_counter = Counter({response: 0 for response in self.valid_responses})
         local_counter["other"] = 0
 
@@ -59,8 +57,8 @@ class OutputParser:
                     else:
                         # If no suitable match or multiple matches found, classify as "other"
                         self.update_counter(local_counter, response, "other", "no or multiple matches")
-        logging.info(f"parsing finished: {local_counter}")
-        self.global_counter += local_counter
+        logging.debug(f"parsing finished: {local_counter}")
+        if product_name: self.global_counter[product_name] = local_counter
         return local_counter
     
     
