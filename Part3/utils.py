@@ -7,6 +7,9 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
+import json
+import os
+import logging
 
 def plot_response_durations(responses:list):
 
@@ -51,9 +54,13 @@ def plot_sentiment_counter(data):
     fig, ax = plt.subplots()
 
     # Plot each sentiment type
-    ax.bar(index - bar_width, negative_counts, bar_width, label='Negative', color='red')
-    ax.bar(index, positive_counts, bar_width, label='Positive', color='blue')
-    ax.bar(index + bar_width, neutral_counts, bar_width, label='Neutral', color='orange')
+    bars_positive = ax.bar(index - bar_width, positive_counts, bar_width, label='Positive', color='blue')
+    bars_neutral = ax.bar(index, neutral_counts, bar_width, label='Neutral', color='orange')
+    bars_negative = ax.bar(index + bar_width, negative_counts, bar_width, label='Negative', color='red')
+
+    # Add text labels above the bars to display the counts
+    for bars in [bars_negative, bars_positive, bars_neutral]:
+        ax.bar_label(bars, padding=3)
 
     # Add labels, legend, and title
     ax.set_ylabel('Counts')
@@ -67,3 +74,18 @@ def plot_sentiment_counter(data):
     plt.tight_layout()
     plt.show()
 
+
+def load_input_file(file_path:str):
+    with open(os.path.abspath(file_path), 'r') as file:
+        data = json.load(file)
+        logging.debug(f"loaded {len(data['items'])} items from input file")
+        return data["items"], data["prompt_template"]
+    
+
+def save_data(data, file_path:str):
+    file_path = os.path.abspath(file_path)
+    try:
+        with open(file_path, 'w') as json_file:
+            json.dump(data, json_file, indent=4)
+    except Exception as e:
+        logging.error(f"An error occurred while writing to the file: {e}")
