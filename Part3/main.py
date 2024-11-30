@@ -19,7 +19,7 @@ def main(input_file:str, reviews_file:str, ollama_address:str, model_name:str, l
         raise ValueError(f'Invalid log level: {log_level}')
     logging.basicConfig(
         level=numeric_level,
-        format='%(asctime)s -  %(levelname)s - %(message)s'
+        format='%(asctime)s - %(levelname)s - %(message)s'
     )
     logging.getLogger("httpx").propagate = False    # disable httpx logging
 

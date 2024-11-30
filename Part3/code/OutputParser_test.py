@@ -46,7 +46,7 @@ def test_parse_responses():
     parser = OutputParser()
 
     responses = ["Positive", "negative", "neutral", "bad feedback", "Great", "Unknown response"]
-    count = parser.parse_responses(responses, debug_list=True)
+    count = parser.parse_responses(responses)
     assert count["positive"] == 2
     assert count["negative"] == 2
     assert count["neutral"] == 1
