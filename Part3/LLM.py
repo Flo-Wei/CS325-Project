@@ -62,7 +62,7 @@ class OllamaLLM():
         assert isinstance(prompt_template, str)
 
         sentiments = []
-        reviews = reviews[:15]
+        # reviews = reviews[:15]
 
         for review in tqdm(reviews, disable=not verbose, desc="progress"):
             result = self.client.generate(

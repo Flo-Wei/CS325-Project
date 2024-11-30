@@ -23,13 +23,7 @@ def main(input_file:str, reviews_file:str, ollama_address:str, model_name:str, l
         host_address=ollama_address,
         model_name=model_name
     )
-    parser = OutputParser(
-        valid_responses={
-            "positive": {"positive", "good", "great", "excellent", "fantastic", "wonderful", "superb", "awesome", "favorable", "happy", "satisfied", "pleased"},
-            "negative": {"negative", "bad", "terrible", "awful", "poor", "horrible", "dismal", "unhappy", "dissatisfied", "sad", "miserable", "displeased", "frustrating", "depressing"},
-            "neutral": {"neutral", "okay", "average", "mediocre", "indifferent", "fair", "so-so", "unremarkable", "balanced", "nonchalant"}
-            }
-    )
+    parser = OutputParser()
 
 
     # reading input file

@@ -82,11 +82,11 @@ class ReviewScraper:
             logging.debug(f"request status code {response.status_code} for {url}")
             if response.status_code != 200:                 # check if the equest was successful
                 logging.error(f"Failed to fetch URL: {url} with status code: {response.status_code}")
-                return response
+                return []
+            return response
         except requests.RequestException as e:
             logging.error(f"Error occurred while scraping {url}: {str(e)}")
             return []
-        return response
 
     def _clean_reviews(self, html_response):
         soup = BeautifulSoup(html_response.content, 'html.parser')                  # initialise parser object with bs4 

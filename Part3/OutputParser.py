@@ -3,11 +3,19 @@ from fuzzywuzzy import fuzz
 import logging
 
 class OutputParser:
-    def __init__(self, valid_responses:set={"positive", "negative", "neutral"}, threshold:int=80):
+    def __init__(self, valid_responses:dict=None, threshold:int=80):
         logging.info("Initializing Output Parser...")
-        self.threshold = self._validate_threshold(threshold)
-        self.valid_responses = valid_responses
         self.global_counter = dict()
+        self.threshold = self._validate_threshold(threshold)
+        if valid_responses:
+            self.valid_responses = valid_responses
+        else:
+            self.valid_responses={
+            "positive": {"positive", "good", "great", "excellent", "fantastic", "wonderful", "superb", "awesome", "favorable", "happy", "satisfied", "pleased"},
+            "negative": {"negative", "bad", "terrible", "awful", "poor", "horrible", "dismal", "unhappy", "dissatisfied", "sad", "miserable", "displeased", "frustrating", "depressing"},
+            "neutral": {"neutral", "okay", "average", "mediocre", "indifferent", "fair", "so-so", "unremarkable", "balanced", "nonchalant"}
+            }
+
 
     def _validate_threshold(self, threshold):
         if 0 <= threshold <= 100:
@@ -20,19 +28,30 @@ class OutputParser:
         return response.strip().lower()
 
     def _find_matches(self, normalized_response):
-        return [valid for valid in self.valid_responses if fuzz.partial_ratio(valid, normalized_response) > self.threshold]
+        matches = []
+        for category, synonyms in self.valid_responses.items():
+            # Check the category itself
+            if fuzz.partial_ratio(category, normalized_response) > self.threshold:
+                matches.append(category)
+            # Check synonyms
+            for synonym in synonyms:
+                if fuzz.partial_ratio(synonym, normalized_response) > self.threshold:
+                    matches.append(category)
+        return list(set(matches))
 
     def update_counter(self, counter, original_response, key, match_type):
         counter[key] += 1
         logging.debug(f"'{original_response}': {key} ({match_type})")
+        
 
     def get_count(self):
         return self.global_counter
 
-    def parse_responses(self, responses:list, product_name:str=None):
+    def parse_responses(self, responses:list, product_name:str=None, debug_list:bool=False):
         logging.debug(f"parsing {len(responses)} responses...")
         local_counter = Counter({response: 0 for response in self.valid_responses})
         local_counter["other"] = 0
+        if debug_list: debug_list = []
 
         for response in responses:
             normalized_response = self._normalize_response(response)
@@ -56,7 +75,7 @@ class OutputParser:
                         self.update_counter(local_counter, response, matches[0], "partial keyword match")
                     else:
                         # If no suitable match or multiple matches found, classify as "other"
-                        self.update_counter(local_counter, response, "other", "no or multiple matches")
+                        self.update_counter(local_counter, response, "other", "no or multiple matches{len(matches)=}")
         logging.debug(f"parsing finished: {local_counter}")
         if product_name: self.global_counter[product_name] = local_counter
         return local_counter
