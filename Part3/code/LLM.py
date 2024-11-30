@@ -92,7 +92,7 @@ if __name__ == "__main__":
     )
 
     import json
-    from utils import plot_response_durations
+    from Part3.code.utils import plot_response_durations
     
     with open(r"C:\Users\flori\OneDrive\Studium\AI Bachelor\Courses\5.Semester\CS 325 - Software Engineering\Project\Part2\reviews.json", 'r') as file:
         data = json.load(file) 

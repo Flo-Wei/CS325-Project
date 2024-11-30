@@ -107,7 +107,7 @@ class ReviewScraper:
 
 
 if __name__ == "__main__":
-    from utils import load_input_file
+    from Part3.code.utils import load_input_file
 
     logging.basicConfig(
         level=logging.INFO,

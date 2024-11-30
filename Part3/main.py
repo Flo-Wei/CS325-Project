@@ -1,8 +1,8 @@
 import logging
-from utils import plot_sentiment_counter, load_input_file, save_data
-from LLM import OllamaLLM
-from OutputParser import OutputParser
-from webscraping import ReviewScraper
+from code.utils import plot_sentiment_counter, load_input_file, save_data
+from code.LLM import OllamaLLM
+from code.OutputParser import OutputParser
+from code.webscraping import ReviewScraper
 
 def main(input_file:str, reviews_file:str, ollama_address:str, model_name:str, log_level:str="WARNING", max_review_pages:int=None):
     # logging configuration
@@ -55,8 +55,8 @@ def main(input_file:str, reviews_file:str, ollama_address:str, model_name:str, l
 if __name__ == "__main__":
 
     main(
-        input_file=r"Part3\input_file.json",
-        reviews_file=r"Part3\reviews_file.json",
+        input_file=r"Part3\review_files\input_file.json",
+        reviews_file=r"Part3\review_files\reviews_file.json",
         ollama_address="http://192.168.100.8:11434",
         model_name="llama3.2:1b",
         log_level="INFO",
