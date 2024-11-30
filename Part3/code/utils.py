@@ -1,7 +1,7 @@
-# CS325 Project - Part 1
+# CS325 Project - Part 3
 # by Florian Weigelt
 #
-#   utils file
+#   utils code file
 #
 # This is a file with additional code that can be imported and used in other parts of the project later
 
@@ -12,6 +12,10 @@ import os
 import logging
 
 def plot_response_durations(responses:list):
+    """
+    This function is only for debug purposes.
+    It plots the durations of different process durations during llm chat completions
+    """
 
     # Extract data for the plot
     total_duration = [item["total_duration"] / 1e9 for item in responses]
@@ -39,6 +43,11 @@ def plot_response_durations(responses:list):
 
 
 def plot_sentiment_counter(data):
+    """
+    This function plots the number of positive, neutral and negative reviews for each product as a bar chart
+
+    data format: {"item_name": Counter()}
+    """
     # Extract data for each sentiment type
     positive_counts = [count['positive'] for count in data.values()]
     negative_counts = [count['negative'] for count in data.values()]
@@ -76,6 +85,9 @@ def plot_sentiment_counter(data):
 
 
 def load_input_file(file_path:str):
+    """
+    This function loads an input file with item names, urls and a prompt template for sentiment analysis. 
+    """
     with open(os.path.abspath(file_path), 'r') as file:
         data = json.load(file)
         logging.debug(f"loaded {len(data['items'])} items from input file")
@@ -83,6 +95,9 @@ def load_input_file(file_path:str):
     
 
 def save_data(data, file_path:str):
+    """
+    Saves data to a file in json format. 
+    """
     file_path = os.path.abspath(file_path)
     try:
         with open(file_path, 'w') as json_file:

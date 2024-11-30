@@ -1,5 +1,12 @@
+# CS325 Project - Part 3
+# by Florian Weigelt
+#
+#   webscraping code file
+#
+# This code handles scraping all reviews for a specific Product from ebay. 
+# It goes throug all review pages with only a single url.
+
 import re
-import json
 from fake_useragent import UserAgent
 from bs4 import BeautifulSoup
 import requests

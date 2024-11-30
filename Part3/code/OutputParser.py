@@ -1,11 +1,23 @@
+# CS325 Project - Part 3
+# by Florian Weigelt
+#
+#   OutputParser code file
+#
+# This parses the sentiment alalysis output of a llm and returns an couter of valid responses.
+# The parser tries to match the acural responses to the vaid responses as good as possible even
+# if there is no exact match. 
+
 from collections import Counter
 from fuzzywuzzy import fuzz
 import logging
 
 class OutputParser:
+    """
+    This object handles parsing LLM outputs for sentiments and collecting them in a counter object
+    """
     def __init__(self, valid_responses:dict=None, threshold:int=80):
         logging.info("Initializing Output Parser...")
-        self.global_counter = dict()
+        self.global_counter = dict()    # collects all items: {"item_name": Counter()}
         self.threshold = self._validate_threshold(threshold)
         if valid_responses:
             self.valid_responses = valid_responses
@@ -18,6 +30,7 @@ class OutputParser:
 
 
     def _validate_threshold(self, threshold):
+        # validates that the threshold parameter is between 0 and 100
         if 0 <= threshold <= 100:
             return threshold
         else:
@@ -25,9 +38,13 @@ class OutputParser:
             raise ValueError(f"Invalid threshold: {threshold}. Must be between 0 and 100.")
         
     def _normalize_response(self, response):
+        # normalizes text
         return response.strip().lower()
 
     def _find_matches(self, normalized_response):
+        """
+        This method uses fuzzy and partial matching to try to find valid responses in the text
+        """
         matches = []
         for category, synonyms in self.valid_responses.items():
             # Check the category itself
@@ -37,21 +54,29 @@ class OutputParser:
             for synonym in synonyms:
                 if fuzz.partial_ratio(synonym, normalized_response) > self.threshold:
                     matches.append(category)
-        return list(set(matches))
+        return list(set(matches))   # the set removes duplicates
 
     def update_counter(self, counter, original_response, key, match_type):
+        """
+        This method updates a counter object and adds debug logging
+        """
         counter[key] += 1
         logging.debug(f"'{original_response}': {key} ({match_type})")
         
 
     def get_count(self):
+        """
+        returns global counter: {"item_name": Counter()}
+        """
         return self.global_counter
 
-    def parse_responses(self, responses:list, product_name:str=None, debug_list:bool=False):
+    def parse_responses(self, responses:list, product_name:str=None):
+        """
+        This method parses a list of responses and tires to count the sentiments. 
+        """
         logging.debug(f"parsing {len(responses)} responses...")
         local_counter = Counter({response: 0 for response in self.valid_responses})
-        local_counter["other"] = 0
-        if debug_list: debug_list = []
+        local_counter["other"] = 0  # other category for everything that could not be classified
 
         for response in responses:
             normalized_response = self._normalize_response(response)
@@ -77,6 +102,7 @@ class OutputParser:
                         # If no suitable match or multiple matches found, classify as "other"
                         self.update_counter(local_counter, response, "other", "no or multiple matches{len(matches)=}")
         logging.debug(f"parsing finished: {local_counter}")
+        # updates the global counter only if a product name is included
         if product_name: self.global_counter[product_name] = local_counter
         return local_counter
     
